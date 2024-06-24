@@ -3,8 +3,7 @@ Author URI: https://elica-webservices.it/
 Theme URI: https://elica-webservices.it/
 Contributors: Elisabetta Carrara
 Tags: two-columns, custom-background, custom-header, custom-menu, blog, news,  editor-style, block-styles, rtl-language-support, featured-image-header, featured-images, flexible-header, custom-colors, full-width-template, sticky-post, threaded-comments, translation-ready, theme-options, one-column, left-sidebar, right-sidebar, three-columns
-Requires at least: 1.0
-Tested up to: 2.1
+Requires CP: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
