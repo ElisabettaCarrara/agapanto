@@ -3,7 +3,7 @@
  * Magazine Posts Grid Widget
  *
  * Display the latest posts from a selected category in a grid layout.
- * Intented to be used in the Magazine Homepage widget area to built a magazine layouted page.
+ * Intended to be used in the Magazine Homepage widget area to build a magazine-layout page.
  *
  * @package Agapanto
  */
@@ -16,8 +16,7 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	/**
 	 * Widget Constructor
 	 */
-	function __construct() {
-
+	public function __construct() {
 		// Setup Widget.
 		parent::__construct(
 			'agapanto-magazine-posts-grid', // ID.
@@ -34,7 +33,6 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	 * Set default settings of the widget
 	 */
 	private function default_settings() {
-
 		$defaults = array(
 			'title'    => esc_html__( 'Magazine (Grid)', 'agapanto' ),
 			'category' => 0,
@@ -50,11 +48,10 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	 *
 	 * @uses this->render()
 	 *
-	 * @param array $args / Parameters from widget area created with register_sidebar().
-	 * @param array $instance / Settings for this widget instance.
+	 * @param array $args Parameters from widget area created with register_sidebar().
+	 * @param array $instance Settings for this widget instance.
 	 */
-	function widget( $args, $instance ) {
-
+	public function widget( $args, $instance ) {
 		// Start Output Buffering.
 		ob_start();
 
@@ -65,7 +62,7 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 		$class = ( 'three-columns' === $settings['layout'] ) ? 'magazine-grid-three-columns' : 'magazine-grid-two-columns';
 
 		// Output.
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 		?>
 
 		<div class="widget-magazine-posts-grid widget-magazine-posts clearfix">
@@ -75,7 +72,7 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 			$this->widget_title( $args, $settings );
 			?>
 
-			<div class="widget-magazine-posts-content <?php echo $class; ?> magazine-grid">
+			<div class="widget-magazine-posts-content <?php echo esc_attr( $class ); ?> magazine-grid">
 
 				<?php $this->render( $settings ); ?>
 
@@ -84,7 +81,7 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 		</div>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// End Output Buffering.
 		ob_end_flush();
@@ -98,10 +95,9 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	 * @uses this->magazine_posts_two_column_grid() or this->magazine_posts_three_column_grid()
 	 * @used-by this->widget()
 	 *
-	 * @param array $settings / Settings for this widget instance.
+	 * @param array $settings Settings for this widget instance.
 	 */
-	function render( $settings ) {
-
+	public function render( $settings ) {
 		// Get cached post ids.
 		$post_ids = agapanto_get_magazine_post_ids( $this->id, $settings['category'], $settings['number'] );
 
@@ -130,7 +126,7 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 
 				<div class="post-column">
 
-					<?php get_template_part( 'template-parts/widgets/magazine-' . $template, 'grid' ); ?>
+					<?php get_template_part( 'template-parts/widgets/magazine-' . sanitize_key( $template ), 'grid' ); ?>
 
 				</div>
 
@@ -149,38 +145,34 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	/**
 	 * Displays Widget Title
 	 *
-	 * @param array $args / Parameters from widget area created with register_sidebar().
-	 * @param array $settings / Settings for this widget instance.
+	 * @param array $args Parameters from widget area created with register_sidebar().
+	 * @param array $settings Settings for this widget instance.
 	 */
-	function widget_title( $args, $settings ) {
-
+	public function widget_title( $args, $settings ) {
 		// Add Widget Title Filter.
 		$widget_title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
 
 		if ( ! empty( $widget_title ) ) :
-
 			// Link Widget Title to category archive when possible.
 			$widget_title = agapanto_magazine_widget_title( $widget_title, $settings['category'] );
 
 			// Display Widget Title.
-			echo $args['before_title'] . $widget_title . $args['after_title'];
-
+			echo wp_kses_post( $args['before_title'] . $widget_title . $args['after_title'] );
 		endif;
 	}
 
 	/**
 	 * Update Widget Settings
 	 *
-	 * @param array $new_instance / New Settings for this widget instance.
-	 * @param array $old_instance / Old Settings for this widget instance.
+	 * @param array $new_instance New Settings for this widget instance.
+	 * @param array $old_instance Old Settings for this widget instance.
 	 * @return array $instance
 	 */
-	function update( $new_instance, $old_instance ) {
-
+	public function update( $new_instance, $old_instance ) {
 		$instance             = $old_instance;
 		$instance['title']    = sanitize_text_field( $new_instance['title'] );
 		$instance['category'] = (int) $new_instance['category'];
-		$instance['layout']   = esc_attr( $new_instance['layout'] );
+		$instance['layout']   = sanitize_key( $new_instance['layout'] );
 		$instance['number']   = (int) $new_instance['number'];
 
 		agapanto_flush_magazine_post_ids();
@@ -191,47 +183,46 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	/**
 	 * Displays Widget Settings Form in the Backend
 	 *
-	 * @param array $instance / Settings for this widget instance.
+	 * @param array $instance Settings for this widget instance.
 	 */
-	function form( $instance ) {
-
+	public function form( $instance ) {
 		// Get Widget Settings.
 		$settings = wp_parse_args( $instance, $this->default_settings() );
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'agapanto' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'agapanto' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'category' ); ?>"><?php esc_html_e( 'Category:', 'agapanto' ); ?></label><br/>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>"><?php esc_html_e( 'Category:', 'agapanto' ); ?></label><br/>
 			<?php
 			// Display Category Select.
-				$args = array(
-					'show_option_all' => esc_html__( 'All Categories', 'agapanto' ),
-					'show_count'      => true,
-					'hide_empty'      => false,
-					'selected'        => $settings['category'],
-					'name'            => $this->get_field_name( 'category' ),
-					'id'              => $this->get_field_id( 'category' ),
-				);
-				wp_dropdown_categories( $args );
-				?>
+			$args = array(
+				'show_option_all' => esc_html__( 'All Categories', 'agapanto' ),
+				'show_count'      => true,
+				'hide_empty'      => false,
+				'selected'        => $settings['category'],
+				'name'            => $this->get_field_name( 'category' ),
+				'id'              => $this->get_field_id( 'category' ),
+			);
+			wp_dropdown_categories( $args );
+			?>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'layout' ); ?>"><?php esc_html_e( 'Grid Layout:', 'agapanto' ); ?></label><br/>
-			<select id="<?php echo $this->get_field_id( 'layout' ); ?>" name="<?php echo $this->get_field_name( 'layout' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>"><?php esc_html_e( 'Grid Layout:', 'agapanto' ); ?></label><br/>
+			<select id="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>">
 				<option <?php selected( $settings['layout'], 'two-columns' ); ?> value="two-columns" ><?php esc_html_e( 'Two Columns Grid', 'agapanto' ); ?></option>
 				<option <?php selected( $settings['layout'], 'three-columns' ); ?> value="three-columns" ><?php esc_html_e( 'Three Columns Grid', 'agapanto' ); ?></option>
 			</select>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts:', 'agapanto' ); ?>
-				<input id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="text" value="<?php echo absint( $settings['number'] ); ?>" size="3" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of posts:', 'agapanto' ); ?>
+				<input id="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'number' ) ); ?>" type="text" value="<?php echo absint( $settings['number'] ); ?>" size="3" />
 			</label>
 		</p>
 
@@ -243,8 +234,6 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
  * Register Widget
  */
 function agapanto_register_magazine_posts_grid_widget() {
-
 	register_widget( 'Agapanto_Magazine_Posts_Grid_Widget' );
-
 }
 add_action( 'widgets_init', 'agapanto_register_magazine_posts_grid_widget' );
