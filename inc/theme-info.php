@@ -37,9 +37,9 @@ function agapanto_theme_info_page() {
 
 	<div class="wrap theme-info-wrap">
 
-		<h1><?php printf( esc_html__( 'Welcome to %1$s %2$s', 'agapanto' ), $theme->display( 'Name' ), $theme->display( 'Version' ) ); ?></h1>
+		<h1><?php printf( esc_html__( 'Welcome to %1$s %2$s', 'agapanto' ), esc_html( $theme->display( 'Name' ) ), esc_html( $theme->display( 'Version' ) ) ); ?></h1>
 
-		<div class="theme-description"><?php echo $theme->display( 'Description' ); ?></div>
+		<div class="theme-description"><?php echo esc_html( $theme->display( 'Description' ) ); ?></div>
 
 		<hr>
 		<div class="important-links clearfix">
@@ -55,7 +55,7 @@ function agapanto_theme_info_page() {
 
 		<div id="getting-started">
 
-			<h3><?php printf( esc_html__( 'Getting Started with %s', 'agapanto' ), $theme->display( 'Name' ) ); ?></h3>
+			<h3><?php printf( esc_html__( 'Getting Started with %s', 'agapanto' ), esc_html( $theme->display( 'Name' ) ) ); ?></h3>
 
 			<div class="columns-wrapper clearfix">
 
@@ -78,10 +78,10 @@ function agapanto_theme_info_page() {
 						<h4><?php esc_html_e( 'Theme Options', 'agapanto' ); ?></h4>
 
 						<p class="about">
-							<?php printf( esc_html__( '%s makes use of the Customizer for all theme settings. Click on "Customize Theme" to open the Customizer now.', 'agapanto' ), $theme->display( 'Name' ) ); ?>
+							<?php printf( esc_html__( '%s makes use of the Customizer for all theme settings. Click on "Customize Theme" to open the Customizer now.', 'agapanto' ), esc_html( $theme->display( 'Name' ) ) ); ?>
 						</p>
 						<p>
-							<a href="<?php echo wp_customize_url(); ?>" class="button button-primary"><?php esc_html_e( 'Customize Theme', 'agapanto' ); ?></a>
+							<a href="<?php echo esc_url_raw( wp_customize_url() ); ?>" class="button button-primary"><?php esc_html_e( 'Customize Theme', 'agapanto' ); ?></a>
 						</p>
 					</div>
 
@@ -151,9 +151,9 @@ function agapanto_theme_info_page() {
 				<?php
 				printf(
 					esc_html__( '%1$s is proudly brought to you by %2$s. If you like this theme, %3$s :)', 'agapanto' ),
-					$theme->display( 'Name' ),
-					'<a target="_blank" href="' . __( 'https://elica.com/', 'agapanto' ) . '?utm_source=theme-info&utm_medium=footer&utm_campaign=agapanto" title="ThemeZee">ThemeZee</a>',
-					'<a target="_blank" href="' . __( 'https://wordpress.org/support/theme/agapanto/reviews/', 'agapanto' ) . '" title="' . esc_attr__( 'Review Agapanto', 'agapanto' ) . '">' . esc_html__( 'rate it', 'agapanto' ) . '</a>'
+					esc_html( $theme->display( 'Name' ) ),
+					'<a target="_blank" href="' . esc_url_raw( __( 'https://elica.com/', 'agapanto' ) . '?utm_source=theme-info&utm_medium=footer&utm_campaign=agapanto' ) . '" title="ThemeZee">ThemeZee</a>',
+					'<a target="_blank" href="' . esc_url_raw( __( 'https://wordpress.org/support/theme/agapanto/reviews/', 'agapanto' ) ) . '" title="' . esc_attr__( 'Review Agapanto', 'agapanto' ) . '">' . esc_html__( 'rate it', 'agapanto' ) . '</a>'
 				);
 				?>
 			</p>

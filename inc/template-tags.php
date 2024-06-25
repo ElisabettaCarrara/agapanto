@@ -54,7 +54,7 @@ if ( ! function_exists( 'agapanto_site_description' ) ) :
 		if ( $description || is_customize_preview() ) :
 			?>
 
-			<p class="site-description"><?php echo $description; ?></p>
+			<p class="site-description"><?php echo esc_html( $description ); ?></p>
 
 			<?php
 		endif;
@@ -257,7 +257,8 @@ if ( ! function_exists( 'agapanto_entry_meta' ) ) :
 		$postmeta .= agapanto_meta_author();
 		$postmeta .= agapanto_meta_category();
 
-		echo '<div class="entry-meta">' . $postmeta . '</div>';
+		// Values are already escaped in agapanto_meta_date(), agapanto_meta_category() and agapanto_meta_author()
+		echo '<div class="entry-meta">' . $postmeta . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 endif;
 
@@ -326,7 +327,7 @@ if ( ! function_exists( 'agapanto_entry_tags' ) ) :
 
 			<div class="entry-tags clearfix">
 				<span class="meta-tags">
-					<?php echo $tag_list; ?>
+					<?php echo wp_kses_post( $tag_list ); ?>
 				</span>
 			</div><!-- .entry-tags -->
 
