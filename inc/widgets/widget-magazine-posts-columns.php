@@ -3,7 +3,7 @@
  * Magazine Columns Widget
  *
  * Display the latest posts from two categories in a two column layout.
- * Intented to be used in the Magazine Homepage widget area to built a magazine layouted page.
+ * Intended to be used in the Magazine Homepage widget area to build a magazine layouted page.
  *
  * @package Agapanto
  */
@@ -64,21 +64,21 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 		$settings = wp_parse_args( $instance, $this->default_settings() );
 
 		// Output.
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 		?>
 
 		<div class="widget-magazine-posts-columns widget-magazine-posts clearfix">
 
 			<div class="widget-magazine-posts-content clearfix">
 
-				<?php echo $this->render( $args, $settings ); ?>
+				<?php echo wp_kses_post( $this->render( $args, $settings ) ); ?>
 
 			</div>
 
 		</div>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// End Output Buffering.
 		ob_end_flush();
@@ -170,7 +170,7 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 				$posts_query->the_post();
 
 				// Display first post differently.
-				if ( true === $settings['highlight_post'] and 0 === $posts_query->current_post ) :
+				if ( true === $settings['highlight_post'] && 0 === $posts_query->current_post ) :
 
 					get_template_part( 'template-parts/widgets/magazine-large-post', 'columns' );
 
@@ -197,7 +197,7 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 	 * @param array  $args / Parameters from widget area created with register_sidebar().
 	 * @param array  $settings / Settings for this widget instance.
 	 * @param int    $category_id / ID of the selected category.
-	 * @param String $category_title / Category Title.
+	 * @param string $category_title / Category Title.
 	 */
 	function category_title( $args, $settings, $category_id, $category_title ) {
 
@@ -210,7 +210,7 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 			$widget_title = agapanto_magazine_widget_title( $widget_title, $category_id );
 
 			// Display Widget Title.
-			echo $args['before_title'] . $widget_title . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $widget_title . $args['after_title'] );
 
 		endif;
 	}
@@ -249,13 +249,13 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'category_one_title' ); ?>"><?php esc_html_e( 'Left Category Title:', 'agapanto' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'category_one_title' ); ?>" name="<?php echo $this->get_field_name( 'category_one_title' ); ?>" type="text" value="<?php echo esc_attr( $settings['category_one_title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category_one_title' ) ); ?>"><?php esc_html_e( 'Left Category Title:', 'agapanto' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category_one_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'category_one_title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['category_one_title'] ); ?>" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'category_one' ); ?>"><?php esc_html_e( 'Left Category:', 'agapanto' ); ?></label><br/>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category_one' ) ); ?>"><?php esc_html_e( 'Left Category:', 'agapanto' ); ?></label><br/>
 			<?php
 			// Display Category One Select.
 				$args = array(
@@ -263,44 +263,44 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 					'show_count'      => true,
 					'hide_empty'      => false,
 					'selected'        => $settings['category_one'],
-					'name'            => $this->get_field_name( 'category_one' ),
-					'id'              => $this->get_field_id( 'category_one' ),
+					'name'            => esc_attr( $this->get_field_name( 'category_one' ) ),
+					'id'              => esc_attr( $this->get_field_id( 'category_one' ) ),
 				);
 				wp_dropdown_categories( $args );
 				?>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'category_two_title' ); ?>"><?php esc_html_e( 'Right Category Title:', 'agapanto' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'category_two_title' ); ?>" name="<?php echo $this->get_field_name( 'category_two_title' ); ?>" type="text" value="<?php echo esc_attr( $settings['category_two_title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category_two_title' ) ); ?>"><?php esc_html_e( 'Right Category Title:', 'agapanto' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category_two_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'category_two_title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['category_two_title'] ); ?>" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'category_two' ); ?>"><?php esc_html_e( 'Right Category:', 'agapanto' ); ?></label><br/>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category_two' ) ); ?>"><?php esc_html_e( 'Right Category:', 'agapanto' ); ?></label><br/>
 			<?php
-			// Display Category One Select.
+			// Display Category Two Select.
 				$args = array(
 					'show_option_all' => esc_html__( 'All Categories', 'agapanto' ),
 					'show_count'      => true,
 					'hide_empty'      => false,
 					'selected'        => $settings['category_two'],
-					'name'            => $this->get_field_name( 'category_two' ),
-					'id'              => $this->get_field_id( 'category_two' ),
+					'name'            => esc_attr( $this->get_field_name( 'category_two' ) ),
+					'id'              => esc_attr( $this->get_field_id( 'category_two' ) ),
 				);
 				wp_dropdown_categories( $args );
 				?>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts:', 'agapanto' ); ?>
-				<input id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="text" value="<?php echo absint( $settings['number'] ); ?>" size="3" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of posts:', 'agapanto' ); ?>
+				<input id="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'number' ) ); ?>" type="text" value="<?php echo esc_attr( absint( $settings['number'] ) ); ?>" size="3" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'highlight_post' ); ?>">
-				<input class="checkbox" type="checkbox" <?php checked( $settings['highlight_post'] ); ?> id="<?php echo $this->get_field_id( 'highlight_post' ); ?>" name="<?php echo $this->get_field_name( 'highlight_post' ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'highlight_post' ) ); ?>">
+				<input class="checkbox" type="checkbox" <?php checked( $settings['highlight_post'] ); ?> id="<?php echo esc_attr( $this->get_field_id( 'highlight_post' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'highlight_post' ) ); ?>" />
 				<?php esc_html_e( 'Highlight first post (big image + excerpt)', 'agapanto' ); ?>
 			</label>
 		</p>
@@ -314,7 +314,7 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
  */
 function agapanto_register_magazine_posts_columns_widget() {
 
-	register_widget( 'Agapanto_Magazine_Posts_Columns_Widget' );
+	register_widget( 'Agapanto_Magazine_Posts_Columns_widget' );
 
 }
 add_action( 'widgets_init', 'agapanto_register_magazine_posts_columns_widget' );
