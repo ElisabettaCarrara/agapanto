@@ -3,7 +3,7 @@
  * Magazine Vertical Box Widget
  *
  * Display the latest posts from a selected category in a vertical box.
- * Intented to be used in the Magazine Homepage widget area to built a magazine layouted page.
+ * Intended to be used in the Magazine Homepage widget area to build a magazine-layout page.
  *
  * @package Agapanto
  */
@@ -16,8 +16,7 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 	/**
 	 * Widget Constructor
 	 */
-	function __construct() {
-
+	public function __construct() {
 		// Setup Widget.
 		parent::__construct(
 			'agapanto-magazine-vertical-box', // ID.
@@ -34,7 +33,6 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 	 * Set default settings of the widget
 	 */
 	private function default_settings() {
-
 		$defaults = array(
 			'title'    => esc_html__( 'Magazine (Vertical Box)', 'agapanto' ),
 			'category' => 0,
@@ -48,11 +46,10 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 	 *
 	 * @uses this->render()
 	 *
-	 * @param array $args / Parameters from widget area created with register_sidebar().
-	 * @param array $instance / Settings for this widget instance.
+	 * @param array $args Parameters from widget area created with register_sidebar().
+	 * @param array $instance Settings for this widget instance.
 	 */
-	function widget( $args, $instance ) {
-
+	public function widget( $args, $instance ) {
 		// Start Output Buffering.
 		ob_start();
 
@@ -60,7 +57,7 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 		$settings = wp_parse_args( $instance, $this->default_settings() );
 
 		// Output.
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 		?>
 
 		<div class="widget-magazine-posts-vertical-box widget-magazine-posts clearfix">
@@ -79,7 +76,7 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 		</div>
 
 		<?php
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		// End Output Buffering.
 		ob_end_flush();
@@ -93,10 +90,9 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 	 * @uses this->magazine_posts_vertical() or this->magazine_posts_vertical()
 	 * @used-by this->widget()
 	 *
-	 * @param array $settings / Settings for this widget instance.
+	 * @param array $settings Settings for this widget instance.
 	 */
-	function render( $settings ) {
-
+	public function render( $settings ) {
 		// Get cached post ids.
 		$post_ids = agapanto_get_magazine_post_ids( $this->id, $settings['category'], 5 );
 
@@ -117,20 +113,14 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 
 			// Display Posts.
 			while ( $posts_query->have_posts() ) :
-
 				$posts_query->the_post();
 
 				// Display first post differently.
 				if ( 0 === $posts_query->current_post ) :
-
 					get_template_part( 'template-parts/widgets/magazine-large-post', 'vertical-box' );
-
 					echo '<div class="small-posts clearfix">';
-
 				else :
-
 					get_template_part( 'template-parts/widgets/magazine-small-post', 'vertical-box' );
-
 				endif;
 
 			endwhile;
@@ -149,34 +139,30 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 	/**
 	 * Displays Widget Title
 	 *
-	 * @param array $args / Parameters from widget area created with register_sidebar().
-	 * @param array $settings / Settings for this widget instance.
+	 * @param array $args Parameters from widget area created with register_sidebar().
+	 * @param array $settings Settings for this widget instance.
 	 */
-	function widget_title( $args, $settings ) {
-
+	public function widget_title( $args, $settings ) {
 		// Add Widget Title Filter.
 		$widget_title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
 
 		if ( ! empty( $widget_title ) ) :
-
 			// Link Widget Title to category archive when possible.
 			$widget_title = agapanto_magazine_widget_title( $widget_title, $settings['category'] );
 
 			// Display Widget Title.
-			echo $args['before_title'] . $widget_title . $args['after_title'];
-
+			echo wp_kses_post( $args['before_title'] . $widget_title . $args['after_title'] );
 		endif;
 	}
 
 	/**
 	 * Update Widget Settings
 	 *
-	 * @param array $new_instance / New Settings for this widget instance.
-	 * @param array $old_instance / Old Settings for this widget instance.
+	 * @param array $new_instance New Settings for this widget instance.
+	 * @param array $old_instance Old Settings for this widget instance.
 	 * @return array $instance
 	 */
-	function update( $new_instance, $old_instance ) {
-
+	public function update( $new_instance, $old_instance ) {
 		$instance             = $old_instance;
 		$instance['title']    = sanitize_text_field( $new_instance['title'] );
 		$instance['category'] = (int) $new_instance['category'];
@@ -189,34 +175,33 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
 	/**
 	 * Displays Widget Settings Form in the Backend
 	 *
-	 * @param array $instance / Settings for this widget instance.
+	 * @param array $instance Settings for this widget instance.
 	 */
-	function form( $instance ) {
-
+	public function form( $instance ) {
 		// Get Widget Settings.
 		$settings = wp_parse_args( $instance, $this->default_settings() );
 		?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'agapanto' ); ?>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'agapanto' ); ?>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" />
 			</label>
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'category' ); ?>"><?php esc_html_e( 'Category:', 'agapanto' ); ?></label><br/>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>"><?php esc_html_e( 'Category:', 'agapanto' ); ?></label><br/>
 			<?php
 			// Display Category Select.
-				$args = array(
-					'show_option_all' => esc_html__( 'All Categories', 'agapanto' ),
-					'show_count'      => true,
-					'hide_empty'      => false,
-					'selected'        => $settings['category'],
-					'name'            => $this->get_field_name( 'category' ),
-					'id'              => $this->get_field_id( 'category' ),
-				);
-				wp_dropdown_categories( $args );
-				?>
+			$args = array(
+				'show_option_all' => esc_html__( 'All Categories', 'agapanto' ),
+				'show_count'      => true,
+				'hide_empty'      => false,
+				'selected'        => $settings['category'],
+				'name'            => $this->get_field_name( 'category' ),
+				'id'              => $this->get_field_id( 'category' ),
+			);
+			wp_dropdown_categories( $args );
+			?>
 		</p>
 
 		<?php
@@ -227,8 +212,6 @@ class Agapanto_Magazine_Vertical_Box_Widget extends WP_Widget {
  * Register Widget
  */
 function agapanto_register_magazine_posts_vertical_box_widget() {
-
 	register_widget( 'Agapanto_Magazine_Vertical_Box_Widget' );
-
 }
 add_action( 'widgets_init', 'agapanto_register_magazine_posts_vertical_box_widget' );
