@@ -11,8 +11,8 @@
 
 	<button class="primary-menu-toggle menu-toggle" aria-controls="primary-menu" aria-expanded="false" <?php agapanto_amp_menu_toggle(); ?>>
 		<?php
-		echo agapanto_get_svg( 'menu' );
-		echo agapanto_get_svg( 'close' );
+		echo wp_kses_post( agapanto_get_svg( 'menu' ) );
+		echo wp_kses_post( agapanto_get_svg( 'close' ) );
 		?>
 		<span class="menu-toggle-text screen-reader-text"><?php esc_html_e( 'Menu', 'agapanto' ); ?></span>
 	</button>
