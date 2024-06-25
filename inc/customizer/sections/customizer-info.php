@@ -37,21 +37,6 @@ function agapanto_customize_register_theme_info_settings( $wp_customize ) {
 		)
 	);
 
-	// Add Pro Version control.
-	if ( ! class_exists( 'Agapanto_Pro' ) ) {
-		$wp_customize->add_control(
-			new Agapanto_Customize_Upgrade_Control(
-				$wp_customize,
-				'agapanto_theme_options[pro_version]',
-				array(
-					'section'  => 'agapanto_section_theme_info',
-					'settings' => array(),
-					'priority' => 20,
-				)
-			)
-		);
-	}
-
 	// Add Magazine Blocks control.
 	if ( ! class_exists( 'ThemeZee_Magazine_Blocks' ) ) {
 		$wp_customize->add_control(
