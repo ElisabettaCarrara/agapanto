@@ -17,7 +17,7 @@
 			title="<?php echo esc_attr_x( 'Search for:', 'label', 'agapanto' ); ?>" />
 	</label>
 	<button type="submit" class="search-submit">
-		<?php echo agapanto_get_svg( 'search' ); ?>
+		<?php echo wp_kses_post( agapanto_get_svg( 'search' ) ); ?>
 		<span class="screen-reader-text"><?php echo esc_html_x( 'Search', 'submit button', 'agapanto' ); ?></span>
 	</button>
 </form>
