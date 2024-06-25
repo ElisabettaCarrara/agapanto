@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Custom functions that are not template related
  *
@@ -11,7 +11,15 @@ if ( ! function_exists( 'agapanto_default_menu' ) ) :
 	 */
 	function agapanto_default_menu() {
 
-		echo '<ul id="menu-main-navigation" class="main-navigation-menu menu">' . wp_list_pages( 'title_li=&echo=0' ) . '</ul>';
+		$attr = array(
+				'li' => array(
+					'class' => array()
+				),
+				'a'  => array(
+					'href' => array()
+				),
+		);
+		echo '<ul id="menu-main-navigation" class="main-navigation-menu menu">' . wp_kses( $list_pages, $attr ) . '</ul>';
 
 	}
 endif;

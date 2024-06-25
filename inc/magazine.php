@@ -81,7 +81,8 @@ if ( ! function_exists( 'agapanto_magazine_entry_meta' ) ) :
 		$postmeta  = agapanto_meta_date();
 		$postmeta .= agapanto_meta_author();
 
-		echo '<div class="entry-meta">' . $postmeta . '</div>';
+		// Values are already escaped in agapanto_meta_date() and agapanto_meta_author()
+		echo '<div class="entry-meta">' . $postmeta . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 endif;
 
@@ -91,7 +92,8 @@ if ( ! function_exists( 'agapanto_magazine_entry_date' ) ) :
 	 * Displays the date of magazine posts
 	 */
 	function agapanto_magazine_entry_date() {
-		echo '<div class="entry-meta">' . agapanto_meta_date() . '</div>';
+		// Value is already escaped in agapanto_meta_date()
+		echo '<div class="entry-meta">' . agapanto_meta_date() . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 endif;
 

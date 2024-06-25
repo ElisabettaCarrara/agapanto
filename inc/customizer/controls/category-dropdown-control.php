@@ -34,9 +34,9 @@ if ( class_exists( 'WP_Customize_Control' ) ) :
 
 							printf(
 								'<option value="%1$s" %2$s>%3$s</option>',
-								$category->term_id,
+								(int) $category->term_id,
 								selected( $this->value(), $category->term_id, false ),
-								$category->name . ' (' . $category->count . ')'
+								esc_html( $category->name ) . ' (' . (int) $category->count . ')'
 							);
 
 							endforeach;
