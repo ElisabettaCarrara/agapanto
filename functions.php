@@ -167,6 +167,26 @@ function agapanto_widgets_init()
 }
 add_action('widgets_init', 'agapanto_widgets_init');
 
+/* sanitize SVGs */
+function agapanto_sanitize_svg($svg) {
+    $allowed_tags = array(
+        'svg' => array(
+            'class'           => true,
+            'aria-hidden'     => true,
+            'aria-labelledby' => true,
+            'role'            => true,
+            'xmlns'           => true,
+            'width'           => true,
+            'height'          => true,
+            'viewbox'         => true,
+        ),
+        'use' => array(
+            'xlink:href' => true,
+        ),
+    );
+    
+    return wp_kses($svg, $allowed_tags);
+}
 
 /**
  * Enqueue scripts and styles.
