@@ -168,9 +168,15 @@ function agapanto_widgets_init()
 add_action('widgets_init', 'agapanto_widgets_init');
 
 /* sanitize SVGs */
+/* sanitize SVGs */
 function agapanto_sanitize_svg($svg) {
+    if (!$svg) {
+        return '';
+    }
+
+    // Allow only specific elements and attributes
     $allowed_tags = array(
-        'svg' => array(
+        'svg'   => array(
             'class'           => true,
             'aria-hidden'     => true,
             'aria-labelledby' => true,
@@ -180,13 +186,36 @@ function agapanto_sanitize_svg($svg) {
             'height'          => true,
             'viewbox'         => true,
         ),
-        'use' => array(
+        'g'     => array('fill' => true),
+        'title' => array('title' => true),
+        'path'  => array(
+            'd'    => true,
+            'fill' => true,
+        ),
+        'use'   => array(
             'xlink:href' => true,
         ),
     );
     
-    return wp_kses($svg, $allowed_tags);
+    // Sanitize
+    $sanitized_svg = wp_kses($svg, $allowed_tags);
+
+    return $sanitized_svg;
 }
+
+function agapanto_svg_icon($icon) {
+    $svg = agapanto_get_svg($icon);
+    $sanitized_svg = agapanto_sanitize_svg($svg);
+    
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    echo $sanitized_svg;
+}
+
+// Add this new function
+function agapanto_escape_svg($svg) {
+    return wp_kses_post($svg);
+}
+
 
 /**
  * Enqueue scripts and styles.
