@@ -24,6 +24,9 @@ For more information about Agapanto please go to https://elica-webservices.it
 
 == Changelog ==
 
+= 1.0.1 =
+Corrected SVGs sanitization process
+
 = 1.0 =
 Initial Release
 Total rebranding, added footer widgets, removed html5 support (deprecated since CP 2.0)
