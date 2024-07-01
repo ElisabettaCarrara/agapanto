@@ -866,7 +866,6 @@ textarea {
 }
 
 .site-branding {
-	float: left;
 	margin: 1em 0;
 	padding: 0;
 	max-width: 100%;
@@ -911,6 +910,13 @@ textarea {
 	color: #22aadd;
 	color: var(--site-title-hover-color);
 }
+.site-branding {
+    flex: 0 1 auto; /* Don't grow, but allow shrinking */
+}
+
+.primary-menu-toggle {
+    flex: 0 0 auto; /* Don't grow or shrink */
+}
 
 .site-branding .custom-logo {
 	margin: 0.3em 1em 0 0;
@@ -919,6 +925,37 @@ textarea {
 	height: auto;
 	border: none;
 	vertical-align: top;
+	height: auto;
+    transition: max-width 0.3s ease; /* This will make the resize smooth */
+}
+
+@media screen and (max-width: 360px) {
+    .site-branding .custom-logo {
+        max-width: 70%;
+    }
+
+    .header-main {
+        justify-content: space-between;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .site-branding .custom-logo {
+        max-width: 65%;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .header-main {
+        display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    }
+
+    .primary-menu-toggle {
+        order: 2; /* This moves the menu icon to the right */
+    }
 }
 
 .site-description {
