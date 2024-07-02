@@ -24,6 +24,9 @@ For more information about Agapanto please go to https://elica-webservices.it
 
 == Changelog ==
 
+= 1.1.0 =
+Corrected magazine widgets
+
 = 1.0.1 =
 Corrected SVGs sanitization process
 
