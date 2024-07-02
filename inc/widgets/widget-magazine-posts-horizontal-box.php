@@ -92,50 +92,56 @@ class Agapanto_Magazine_Horizontal_Box_Widget extends WP_Widget {
 	 *
 	 * @param array $settings Settings for this widget instance.
 	 */
-	public function render( $settings ) {
-		// Get cached post ids.
-		$post_ids = agapanto_get_magazine_post_ids( $this->id, $settings['category'], 4 );
+	protected function render( $settings ) {
+    // Get cached post ids.
+    $post_ids = agapanto_get_magazine_post_ids( $this->id, $settings['category'], 4 );
 
-		// Fetch posts from database.
-		$query_arguments = array(
-			'post__in'            => $post_ids,
-			'posts_per_page'      => 4,
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		);
-		$posts_query     = new WP_Query( $query_arguments );
+    if ( empty( $post_ids ) ) {
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in this category.', 'agapanto' ) . '</p>';
+        return;
+    }
 
-		// Check if there are posts.
-		if ( $posts_query->have_posts() ) :
+    // Fetch posts from database.
+    $query_arguments = array(
+        'post__in'            => $post_ids,
+        'posts_per_page'      => 4,
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => true,
+    );
+    $posts_query = new WP_Query( $query_arguments );
 
-			// Limit the number of words for the excerpt.
-			add_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
+    // Check if there are posts.
+    if ( $posts_query->have_posts() ) :
 
-			// Display Posts.
-			while ( $posts_query->have_posts() ) :
-				$posts_query->the_post();
+        // Limit the number of words for the excerpt.
+        add_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
 
-				// Display first post differently.
-				if ( 0 === $posts_query->current_post ) :
-					get_template_part( 'template-parts/widgets/magazine-large-post', 'horizontal-box' );
-					echo '<div class="medium-posts clearfix">';
-				else :
-					get_template_part( 'template-parts/widgets/magazine-medium-post', 'horizontal-box' );
-				endif;
+        // Display Posts.
+        while ( $posts_query->have_posts() ) :
+            $posts_query->the_post();
 
-			endwhile;
+            // Display first post differently.
+            if ( 0 === $posts_query->current_post ) :
+                get_template_part( 'template-parts/widgets/magazine-large-post', 'horizontal-box' );
+                echo '<div class="medium-posts clearfix">';
+            else :
+                get_template_part( 'template-parts/widgets/magazine-medium-post', 'horizontal-box' );
+            endif;
 
-			echo '</div><!-- end .medium-posts -->';
+        endwhile;
 
-			// Remove excerpt filter.
-			remove_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
+        echo '</div><!-- end .medium-posts -->';
 
-		endif;
+        // Remove excerpt filter.
+        remove_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
 
-		// Reset Postdata.
-		wp_reset_postdata();
-	}
+    else :
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in this category.', 'agapanto' ) . '</p>';
+    endif;
 
+    // Reset Postdata.
+    wp_reset_postdata();
+}
 	/**
 	 * Displays Widget Title
 	 *
