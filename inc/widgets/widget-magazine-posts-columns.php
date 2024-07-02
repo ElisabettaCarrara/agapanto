@@ -105,7 +105,7 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
         return;
     }
 }
-
+?>
 		<div class="magazine-posts-column-left magazine-posts-columns clearfix">
 
 			<div class="magazine-posts-columns-content clearfix">
