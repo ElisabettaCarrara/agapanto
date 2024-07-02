@@ -98,50 +98,57 @@ class Agapanto_Magazine_Posts_Grid_Widget extends WP_Widget {
 	 * @param array $settings Settings for this widget instance.
 	 */
 	public function render( $settings ) {
-		// Get cached post ids.
-		$post_ids = agapanto_get_magazine_post_ids( $this->id, $settings['category'], $settings['number'] );
+    // Get cached post ids.
+    $post_ids = agapanto_get_magazine_post_ids( $this->id, $settings['category'], $settings['number'] );
 
-		// Fetch posts from database.
-		$query_arguments = array(
-			'post__in'            => $post_ids,
-			'posts_per_page'      => absint( $settings['number'] ),
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		);
-		$posts_query     = new WP_Query( $query_arguments );
+    if ( empty( $post_ids ) ) {
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in this category.', 'agapanto' ) . '</p>';
+        return;
+    }
 
-		// Set template.
-		$template = ( 'three-columns' === $settings['layout'] ) ? 'medium-post' : 'large-post';
+    // Fetch posts from database.
+    $query_arguments = array(
+        'post__in'            => $post_ids,
+        'posts_per_page'      => absint( $settings['number'] ),
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => true,
+    );
+    $posts_query     = new WP_Query( $query_arguments );
 
-		// Check if there are posts.
-		if ( $posts_query->have_posts() ) :
+    // Set template.
+    $template = ( 'three-columns' === $settings['layout'] ) ? 'medium-post' : 'large-post';
 
-			// Limit the number of words for the excerpt.
-			add_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
+    // Check if there are posts.
+    if ( $posts_query->have_posts() ) :
 
-			// Display Posts.
-			while ( $posts_query->have_posts() ) :
-				$posts_query->the_post();
-				?>
+        // Limit the number of words for the excerpt.
+        add_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
 
-				<div class="post-column">
+        // Display Posts.
+        while ( $posts_query->have_posts() ) :
+            $posts_query->the_post();
+            ?>
 
-					<?php get_template_part( 'template-parts/widgets/magazine-' . sanitize_key( $template ), 'grid' ); ?>
+            <div class="post-column">
 
-				</div>
+                <?php get_template_part( 'template-parts/widgets/magazine-' . sanitize_key( $template ), 'grid' ); ?>
 
-				<?php
-			endwhile;
+            </div>
 
-			// Remove excerpt filter.
-			remove_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
+            <?php
+        endwhile;
 
-		endif;
+        // Remove excerpt filter.
+        remove_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
 
-		// Reset Postdata.
-		wp_reset_postdata();
-	}
+    else :
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in this category.', 'agapanto' ) . '</p>';
+    endif;
 
+    // Reset Postdata.
+    wp_reset_postdata();
+}
+	
 	/**
 	 * Displays Widget Title
 	 *
