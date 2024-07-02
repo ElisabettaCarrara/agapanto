@@ -99,13 +99,17 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
     // Get cached post ids.
     $post_ids_category_one = agapanto_get_magazine_post_ids( $this->id . '-left-category', $settings['category_one'], $settings['number'] );
     $post_ids_category_two = agapanto_get_magazine_post_ids( $this->id . '-right-category', $settings['category_two'], $settings['number'] );
-
+    
     if ( empty( $post_ids_category_one ) && empty( $post_ids_category_two ) ) {
         echo '<p class="no-posts-found">' . esc_html__( 'No posts found in either category.', 'agapanto' ) . '</p>';
         return;
     }
-}
-?>
+
+    // If there are posts, output the HTML
+    ?>
+		<div class="magazine-posts-column-left magazine-posts-columns clearfix">
+
+			<div class="magazine-posts-columns-content clearfix">
 		<div class="magazine-posts-column-left magazine-posts-columns clearfix">
 
 			<div class="magazine-posts-columns-content clearfix">
