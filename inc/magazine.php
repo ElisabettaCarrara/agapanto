@@ -117,33 +117,35 @@ function agapanto_magazine_posts_excerpt_length( $length ) {
  * @param int    $number_of_posts Number of posts.
  * @return array Post IDs
  */
+
 function agapanto_get_magazine_post_ids( $cache_id, $category, $number_of_posts ) {
+    $cache_id = sanitize_key( $cache_id );
+    $post_ids = get_transient( 'agapanto_magazine_post_ids' );
 
-	$cache_id = sanitize_key( $cache_id );
-	$post_ids = get_transient( 'agapanto_magazine_post_ids' );
+    if ( ! is_array( $post_ids ) ) {
+        $post_ids = array();
+    }
 
-	if ( ! isset( $post_ids[ $cache_id ] ) || is_customize_preview() ) {
+    if ( ! isset( $post_ids[ $cache_id ] ) || is_customize_preview() ) {
+        // Get Posts from Database.
+        $query_arguments = array(
+            'fields'              => 'ids',
+            'cat'                 => (int) $category,
+            'posts_per_page'      => (int) $number_of_posts,
+            'ignore_sticky_posts' => true,
+            'no_found_rows'       => true,
+        );
+        $query = new WP_Query( $query_arguments );
 
-		// Get Posts from Database.
-		$query_arguments = array(
-			'fields'              => 'ids',
-			'cat'                 => (int) $category,
-			'posts_per_page'      => (int) $number_of_posts,
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		);
-		$query           = new WP_Query( $query_arguments );
+        // Create an array of all post ids.
+        $post_ids[ $cache_id ] = $query->have_posts() ? $query->posts : array();
 
-		// Create an array of all post ids.
-		$post_ids[ $cache_id ] = $query->posts;
+        // Set Transient.
+        set_transient( 'agapanto_magazine_post_ids', $post_ids );
+    }
 
-		// Set Transient.
-		set_transient( 'agapanto_magazine_post_ids', $post_ids );
-	}
-
-	return apply_filters( 'agapanto_magazine_post_ids', $post_ids[ $cache_id ], $cache_id );
+    return apply_filters( 'agapanto_magazine_post_ids', $post_ids[ $cache_id ] ?? array(), $cache_id );
 }
-
 
 /**
  * Delete Cached Post IDs
