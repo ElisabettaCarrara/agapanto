@@ -96,11 +96,15 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 	 * @param array $settings / Settings for this widget instance.
 	 */
 	function render( $args, $settings ) {
+    // Get cached post ids.
+    $post_ids_category_one = agapanto_get_magazine_post_ids( $this->id . '-left-category', $settings['category_one'], $settings['number'] );
+    $post_ids_category_two = agapanto_get_magazine_post_ids( $this->id . '-right-category', $settings['category_two'], $settings['number'] );
 
-		// Get cached post ids.
-		$post_ids_category_one = agapanto_get_magazine_post_ids( $this->id . '-left-category', $settings['category_one'], $settings['number'] );
-		$post_ids_category_two = agapanto_get_magazine_post_ids( $this->id . '-right-category', $settings['category_two'], $settings['number'] );
-		?>
+    if ( empty( $post_ids_category_one ) && empty( $post_ids_category_two ) ) {
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in either category.', 'agapanto' ) . '</p>';
+        return;
+    }
+}
 
 		<div class="magazine-posts-column-left magazine-posts-columns clearfix">
 
@@ -148,48 +152,54 @@ class Agapanto_Magazine_Posts_Columns_Widget extends WP_Widget {
 	 * @param array $post_ids / Array with post ids.
 	 */
 	function magazine_posts( $settings, $post_ids, $number_of_posts ) {
+    if ( empty( $post_ids ) ) {
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in this category.', 'agapanto' ) . '</p>';
+        return;
+    }
 
-		// Fetch posts from database.
-		$query_arguments = array(
-			'post__in'            => $post_ids,
-			'posts_per_page'      => absint( $number_of_posts ),
-			'ignore_sticky_posts' => true,
-			'no_found_rows'       => true,
-		);
-		$posts_query     = new WP_Query( $query_arguments );
+    // Fetch posts from database.
+    $query_arguments = array(
+        'post__in'            => $post_ids,
+        'posts_per_page'      => absint( $number_of_posts ),
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => true,
+    );
+    $posts_query = new WP_Query( $query_arguments );
 
-		// Check if there are posts.
-		if ( $posts_query->have_posts() ) :
+    // Check if there are posts.
+    if ( $posts_query->have_posts() ) :
 
-			// Limit the number of words for the excerpt.
-			add_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
+        // Limit the number of words for the excerpt.
+        add_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
 
-			// Display Posts.
-			while ( $posts_query->have_posts() ) :
+        // Display Posts.
+        while ( $posts_query->have_posts() ) :
 
-				$posts_query->the_post();
+            $posts_query->the_post();
 
-				// Display first post differently.
-				if ( true === $settings['highlight_post'] && 0 === $posts_query->current_post ) :
+            // Display first post differently.
+            if ( true === $settings['highlight_post'] && 0 === $posts_query->current_post ) :
 
-					get_template_part( 'template-parts/widgets/magazine-large-post', 'columns' );
+                get_template_part( 'template-parts/widgets/magazine-large-post', 'columns' );
 
-				else :
+            else :
 
-					get_template_part( 'template-parts/widgets/magazine-small-post', 'columns' );
+                get_template_part( 'template-parts/widgets/magazine-small-post', 'columns' );
 
-				endif;
+            endif;
 
-			endwhile;
+        endwhile;
 
-			// Remove excerpt filter.
-			remove_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
+        // Remove excerpt filter.
+        remove_filter( 'excerpt_length', 'agapanto_magazine_posts_excerpt_length' );
 
-		endif;
+    else :
+        echo '<p class="no-posts-found">' . esc_html__( 'No posts found in this category.', 'agapanto' ) . '</p>';
+    endif;
 
-		// Reset Postdata.
-		wp_reset_postdata();
-	}
+    // Reset Postdata.
+    wp_reset_postdata();
+}
 
 	/**
 	 * Displays Category Widget Title
