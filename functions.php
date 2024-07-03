@@ -164,6 +164,18 @@ function agapanto_widgets_init()
 			'after_title'   => '</h3></div>',
 		)
 	);
+
+	register_sidebar(
+		array(
+			'name'          => esc_html__('Portfolio Homepage', 'agapanto'),
+			'id'            => 'portfolio-homepage',
+			'description'   => esc_html__('Appears on blog index and Portfolio Homepage template. You can use the Portfolio widgets here.', 'agapanto'),
+			'before_widget' => '<div id="%1$s" class="widget %2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<div class="widget-header"><h3 class="widget-title">',
+			'after_title'   => '</h3></div>',
+		)
+	);
 }
 add_action('widgets_init', 'agapanto_widgets_init');
 
@@ -370,8 +382,17 @@ require get_template_directory() . '/inc/slider.php';
 // Include Magazine Functions.
 require get_template_directory() . '/inc/magazine.php';
 
+// Include Portfolio Functions.
+require get_template_directory() . '/inc/portfolio.php';
+
 // Include Widget Files.
 require get_template_directory() . '/inc/widgets/widget-magazine-posts-columns.php';
 require get_template_directory() . '/inc/widgets/widget-magazine-posts-grid.php';
 require get_template_directory() . '/inc/widgets/widget-magazine-posts-horizontal-box.php';
 require get_template_directory() . '/inc/widgets/widget-magazine-posts-vertical-box.php';
+
+// Include Widget Files.
+require get_template_directory() . '/inc/widgets/widget-portfolio-posts-columns.php';
+require get_template_directory() . '/inc/widgets/widget-portfolio-posts-grid.php';
+require get_template_directory() . '/inc/widgets/widget-portfolio-posts-horizontal-box.php';
+require get_template_directory() . '/inc/widgets/widget-portfolio-posts-vertical-box.php';

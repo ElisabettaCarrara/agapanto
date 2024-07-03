@@ -44,7 +44,7 @@ Nicolas Gallagher and Jonathan Neal http://necolas.github.com/normalize.css/
 # - Blocks
 # - Featured Posts
 # - Widgets
-# - Magazine Widgets
+# - Magazine Widgets and Portfolio Widgets
 # - Comments
 # - Media
 # - Footer
@@ -2306,6 +2306,168 @@ div.wp-block-columns {
 }
 
 .widget-magazine-posts-columns .medium-post {
+	padding-right: 0;
+	width: 100%;
+}
+
+/*--------------------------------------------------------------
+# - Portfolio Widgets
+--------------------------------------------------------------*/
+.widget-portfolio-posts {
+	margin-bottom: -1em;
+}
+
+.widget-portfolio-posts .type-post {
+	margin: 0 0 2em 0;
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+.widget-portfolio-posts .type-post .wp-post-image {
+	margin: 0 0 0.5em;
+	max-width: 100%;
+}
+
+.widget-portfolio-posts .type-post .entry-content {
+	font-size: 16px;
+	font-size: 1rem;
+}
+
+.widget-portfolio-posts .type-post .entry-content p {
+	margin: 1em 0 0;
+}
+
+.widget-portfolio-posts .type-post .more-link {
+	margin: 1em 0 0;
+}
+
+.widget-portfolio-posts .large-post .entry-title {
+	font-size: 24px;
+	font-size: 1.5rem;
+}
+
+.widget-portfolio-posts .medium-post {
+	display: block;
+	float: left;
+	box-sizing: border-box;
+	padding-right: 2em;
+	width: 33.33333333%;
+}
+
+.widget-portfolio-posts .medium-post .entry-title {
+	font-size: 16px;
+	font-size: 1rem;
+}
+
+.widget-portfolio-posts .small-post {
+	display: block;
+	float: left;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.widget-portfolio-posts .small-post .wp-post-image {
+	float: left;
+	margin: 0 1em 0 0;
+	max-width: 40%;
+}
+
+.widget-portfolio-posts .small-post .entry-title {
+	font-size: 15px;
+	font-size: 0.9375rem;
+}
+
+.widget-portfolio-posts .medium-post .entry-meta,
+.widget-portfolio-posts .small-post .entry-meta {
+	font-size: 12px;
+	font-size: 0.75rem;
+}
+
+/* Portfolio Posts Horizontal Box Widget */
+.widget-portfolio-posts .portfolio-horizontal-box .large-post .wp-post-image {
+	float: left;
+	box-sizing: border-box;
+	margin: 0;
+	padding-right: 1em;
+	width: 50%;
+}
+
+.widget-portfolio-posts .portfolio-horizontal-box .large-post .post-content {
+	float: right;
+	box-sizing: border-box;
+	padding-left: 1em;
+	width: 50%;
+}
+
+.widget-portfolio-posts .portfolio-horizontal-box .medium-posts {
+	margin-right: -2em;
+}
+
+/* Portfolio Posts Vertical Box Widget */
+.widget-portfolio-posts .portfolio-vertical-box .large-post {
+	float: left;
+	box-sizing: border-box;
+	margin-bottom: 1em;
+	padding-right: 1em;
+	width: 50%;
+}
+
+.widget-portfolio-posts .portfolio-vertical-box .small-posts {
+	box-sizing: border-box;
+	margin-left: 50%;
+	padding-left: 1em;
+	width: 50%;
+}
+
+/* Portfolio Posts Grid Widget */
+.widget-portfolio-posts .portfolio-grid {
+	margin-right: -2em;
+}
+
+.widget-portfolio-posts .portfolio-grid .large-post {
+	float: left;
+	box-sizing: border-box;
+	padding-right: 2em;
+	width: 50%;
+}
+
+.widget-portfolio-posts .portfolio-grid .post-column:nth-child(2n+1) .large-post,
+.widget-portfolio-posts .portfolio-grid .post-column:nth-child(3n+1) .medium-post {
+	clear: left;
+}
+
+/* Portfolio Posts Columns Widget */
+.agapanto-portfolio-posts-columns {
+	padding: 0;
+}
+
+.widget-portfolio-posts-columns .portfolio-posts-columns .portfolio-posts-columns-content .portfolio-posts-columns-post-list {
+	float: left;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.widget-portfolio-posts-columns .portfolio-posts-columns .portfolio-posts-columns-content {
+	float: left;
+	width: 100%;
+}
+
+.widget-portfolio-posts-columns .portfolio-posts-column-left {
+	float: left;
+	box-sizing: border-box;
+	padding-right: 1em;
+	width: 50%;
+}
+
+.widget-portfolio-posts-columns .portfolio-posts-column-right {
+	box-sizing: border-box;
+	margin-left: 50%;
+	padding-left: 1em;
+	width: 50%;
+}
+
+.widget-portfolio-posts-columns .medium-post {
 	padding-right: 0;
 	width: 100%;
 }
