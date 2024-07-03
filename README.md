@@ -24,6 +24,9 @@ For more information about Agapanto please go to https://elica-webservices.it
 
 == Changelog ==
 
+= 1.2.0 =
+Add Porfolio Homepage feature (it is the same as Magazine Homepage but it is intended to build a portfolio page)
+
 = 1.1.0 =
 Corrected magazine widgets
 
