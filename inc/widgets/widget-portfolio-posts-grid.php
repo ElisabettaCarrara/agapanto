@@ -1,0 +1,256 @@
+<?php
+
+/**
+ * Portfolio Posts Grid Widget
+ *
+ * Display the latest posts from a selected category in a grid layout.
+ * Intended to be used in the Portfolio Page widget area to build a portfolio-layout page.
+ *
+ * @package Agapanto
+ */
+
+/**
+ * Portfolio Widget Class
+ */
+class Agapanto_Portfolio_Posts_Grid_Widget extends WP_Widget
+{
+
+    /**
+     * Widget Constructor
+     */
+    public function __construct()
+    {
+        // Setup Widget.
+        parent::__construct(
+            'agapanto-portfolio-posts-grid', // ID.
+            esc_html__('Portfolio (Grid)', 'agapanto'), // Name.
+            array(
+                'classname'                   => 'agapanto-portfolio-grid-widget',
+                'description'                 => esc_html__('Displays your posts from a selected category in a grid layout.', 'agapanto'),
+                'customize_selective_refresh' => true,
+            ) // Args.
+        );
+    }
+
+    /**
+     * Set default settings of the widget
+     */
+    private function default_settings()
+    {
+        $defaults = array(
+            'title'    => esc_html__('Portfolio (Grid)', 'agapanto'),
+            'category' => 0,
+            'layout'   => 'three-columns',
+            'number'   => 6,
+        );
+
+        return $defaults;
+    }
+
+    /**
+     * Main Function to display the widget
+     *
+     * @uses this->render()
+     *
+     * @param array $args Parameters from widget area created with register_sidebar().
+     * @param array $instance Settings for this widget instance.
+     */
+    public function widget($args, $instance)
+    {
+        // Start Output Buffering.
+        ob_start();
+
+        // Get Widget Settings.
+        $settings = wp_parse_args($instance, $this->default_settings());
+
+        // Set Widget class.
+        $class = ('three-columns' === $settings['layout']) ? 'portfolio-grid-three-columns' : 'portfolio-grid-two-columns';
+
+        // Output.
+        echo wp_kses_post($args['before_widget']);
+?>
+
+        <div class="widget-portfolio-posts-grid widget-portfolio-posts clearfix">
+
+            <?php
+            // Display Title.
+            $this->widget_title($args, $settings);
+            ?>
+
+            <div class="widget-portfolio-posts-content <?php echo esc_attr($class); ?> portfolio-grid">
+
+                <?php $this->render($settings); ?>
+
+            </div>
+
+        </div>
+
+        <?php
+        echo wp_kses_post($args['after_widget']);
+
+        // End Output Buffering.
+        ob_end_flush();
+    }
+
+    /**
+     * Renders the Widget Content
+     *
+     * Switches between two or three column layout style based on widget settings
+     *
+     * @uses this->portfolio_posts_two_column_grid() or this->portfolio_posts_three_column_grid()
+     * @used-by this->widget()
+     *
+     * @param array $settings Settings for this widget instance.
+     */
+    public function render($settings)
+    {
+        // Get cached post ids.
+        $post_ids = agapanto_get_portfolio_post_ids($this->id, $settings['category'], $settings['number']);
+
+        if (empty($post_ids)) {
+            echo '<p class="no-posts-found">' . esc_html__('No posts found in this category.', 'agapanto') . '</p>';
+            return;
+        }
+
+        // Fetch posts from database.
+        $query_arguments = array(
+            'post__in'            => $post_ids,
+            'posts_per_page'      => absint($settings['number']),
+            'ignore_sticky_posts' => true,
+            'no_found_rows'       => true,
+        );
+        $posts_query     = new WP_Query($query_arguments);
+
+        // Set template.
+        $template = ('three-columns' === $settings['layout']) ? 'medium-post' : 'large-post';
+
+        // Check if there are posts.
+        if ($posts_query->have_posts()) :
+
+            // Limit the number of words for the excerpt.
+            add_filter('excerpt_length', 'agapanto_portfolio_posts_excerpt_length');
+
+            // Display Posts.
+            while ($posts_query->have_posts()) :
+                $posts_query->the_post();
+        ?>
+
+                <div class="post-column">
+
+                    <?php get_template_part('template-parts/widgets/portfolio-' . sanitize_key($template), 'grid'); ?>
+
+                </div>
+
+        <?php
+            endwhile;
+
+            // Remove excerpt filter.
+            remove_filter('excerpt_length', 'agapanto_portfolio_posts_excerpt_length');
+
+        else :
+            echo '<p class="no-posts-found">' . esc_html__('No posts found in this category.', 'agapanto') . '</p>';
+        endif;
+
+        // Reset Postdata.
+        wp_reset_postdata();
+    }
+
+    /**
+     * Displays Widget Title
+     *
+     * @param array $args Parameters from widget area created with register_sidebar().
+     * @param array $settings Settings for this widget instance.
+     */
+    public function widget_title($args, $settings)
+    {
+        // Add Widget Title Filter.
+        $widget_title = apply_filters('widget_title', $settings['title'], $settings, $this->id_base);
+
+        if (!empty($widget_title)) :
+            // Link Widget Title to category archive when possible.
+            $widget_title = agapanto_portfolio_widget_title($widget_title, $settings['category']);
+
+            // Display Widget Title.
+            echo wp_kses_post($args['before_title'] . $widget_title . $args['after_title']);
+        endif;
+    }
+
+    /**
+     * Update Widget Settings
+     *
+     * @param array $new_instance New Settings for this widget instance.
+     * @param array $old_instance Old Settings for this widget instance.
+     * @return array $instance
+     */
+    public function update($new_instance, $old_instance)
+    {
+        $instance             = $old_instance;
+        $instance['title']    = sanitize_text_field($new_instance['title']);
+        $instance['category'] = (int) $new_instance['category'];
+        $instance['layout']   = sanitize_key($new_instance['layout']);
+        $instance['number']   = (int) $new_instance['number'];
+
+        agapanto_flush_portfolio_post_ids();
+
+        return $instance;
+    }
+
+    /**
+     * Displays Widget Settings Form in the Backend
+     *
+     * @param array $instance Settings for this widget instance.
+     */
+    public function form($instance)
+    {
+        // Get Widget Settings.
+        $settings = wp_parse_args($instance, $this->default_settings());
+        ?>
+
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_html_e('Title:', 'agapanto'); ?>
+                <input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>" name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text" value="<?php echo esc_attr($settings['title']); ?>" />
+            </label>
+        </p>
+
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('category')); ?>"><?php esc_html_e('Category:', 'agapanto'); ?></label><br />
+            <?php
+            // Display Category Select.
+            $args = array(
+                'show_option_all' => esc_html__('All Categories', 'agapanto'),
+                'show_count'      => true,
+                'hide_empty'      => false,
+                'selected'        => $settings['category'],
+                'name'            => $this->get_field_name('category'),
+                'id'              => $this->get_field_id('category'),
+            );
+            wp_dropdown_categories($args);
+            ?>
+        </p>
+
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('layout')); ?>"><?php esc_html_e('Grid Layout:', 'agapanto'); ?></label><br />
+            <select id="<?php echo esc_attr($this->get_field_id('layout')); ?>" name="<?php echo esc_attr($this->get_field_name('layout')); ?>">
+                <option <?php selected($settings['layout'], 'two-columns'); ?> value="two-columns"><?php esc_html_e('Two Columns Grid', 'agapanto'); ?></option>
+                <option <?php selected($settings['layout'], 'three-columns'); ?> value="three-columns"><?php esc_html_e('Three Columns Grid', 'agapanto'); ?></option>
+            </select>
+        </p>
+
+        <p>
+            <label for="<?php echo esc_attr($this->get_field_id('number')); ?>"><?php esc_html_e('Number of posts:', 'agapanto'); ?>
+                <input id="<?php echo esc_attr($this->get_field_id('number')); ?>" name="<?php echo esc_attr($this->get_field_name('number')); ?>" type="text" value="<?php echo absint($settings['number']); ?>" size="3" />
+            </label>
+        </p>
+
+<?php
+    }
+}
+
+/**
+ * Register Widget
+ */
+function agapanto_register_portfolio_posts_grid_widget()
+{
+    register_widget('Agapanto_Portfolio_Posts_Grid_Widget');
+}
+add_action('widgets_init', 'agapanto_register_portfolio_posts_grid_widget');
