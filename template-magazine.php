@@ -12,10 +12,7 @@ get_header(); ?>
 	<section id="primary" class="fullwidth-content-area content-area">
 		<main id="main" class="site-main" role="main">
 
-		<?php
-		// Display Magazine Homepage Widgets.
-		agapanto_magazine_widgets();
-		?>
+		<!-- content goes here -->
 
 		</main><!-- #main -->
 	</section><!-- #primary -->
