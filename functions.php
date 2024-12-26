@@ -6,15 +6,6 @@
  * @package Agapanto
  */
 
-/**
- * Agapanto works in ClassicPress 1.0 or later.
- */
-if (version_compare($GLOBALS['wp_version'], '4.7-alpha', '<')) {
-	require get_template_directory() . '/inc/back-compat.php';
-	return;
-}
-
-
 if (!function_exists('agapanto_setup')) :
 	/**
 	 * Sets up theme defaults and registers support for various ClassicPress/ClassicPress features.
