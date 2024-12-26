@@ -1,8 +1,8 @@
 <?php
 /**
- * Template Name: Magazine Homepage
+ * Template Name: Portfolio Homepage
  *
- * Description: A custom page template for displaying the magazine homepage widgets.
+ * Description: A custom page template for displaying the portfolio homepage widgets.
  *
  * @package Agapanto
  */

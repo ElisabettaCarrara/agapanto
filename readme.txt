@@ -1,7 +1,7 @@
 === Agapanto ===
 Author URI: https://elica-webservices.it/
 Theme URI: https://elica-webservices.it/
-Version: 2.1.1
+Version: 2.1.2
 Contributors: Elisabetta Carrara
 Tags: two-columns, custom-background, custom-header, custom-menu, blog, news,  editor-style, block-styles, rtl-language-support, featured-image-header, featured-images, flexible-header, custom-colors, full-width-template, sticky-post, threaded-comments, translation-ready, theme-options, one-column, left-sidebar, right-sidebar, three-columns
 Requires at least: 1.0
