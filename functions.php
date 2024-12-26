@@ -143,32 +143,38 @@ function agapanto_widgets_init()
 			'after_title'   => '</h3></div>',
 		)
 	);
-
-	register_sidebar(
-		array(
-			'name'          => esc_html__('Magazine Homepage', 'agapanto'),
-			'id'            => 'magazine-homepage',
-			'description'   => esc_html__('Appears on blog index and Magazine Homepage template. You can use the Magazine widgets here.', 'agapanto'),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<div class="widget-header"><h3 class="widget-title">',
-			'after_title'   => '</h3></div>',
-		)
-	);
-
-	register_sidebar(
-		array(
-			'name'          => esc_html__('Portfolio Homepage', 'agapanto'),
-			'id'            => 'portfolio-homepage',
-			'description'   => esc_html__('Appears on blog index and Portfolio Homepage template. You can use the Portfolio widgets here.', 'agapanto'),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<div class="widget-header"><h3 class="widget-title">',
-			'after_title'   => '</h3></div>',
-		)
-	);
 }
 add_action('widgets_init', 'agapanto_widgets_init');
+
+/**
+ * Conditionally register widget areas based on the selected template.
+ */
+function agapanto_conditional_sidebars() {
+    if (is_page_template('template-magazine.php')) {
+        register_sidebar(array(
+            'name'          => esc_html__('Magazine Homepage', 'agapanto'),
+            'id'            => 'magazine-homepage',
+            'description'   => esc_html__('Appears on blog index and Magazine Homepage template. You can use the Magazine widgets here.', 'agapanto'),
+            'before_widget' => '<div id="%1$s" class="widget %2$s">',
+            'after_widget'  => '</div>',
+            'before_title'  => '<div class="widget-header"><h3 class="widget-title">',
+            'after_title'   => '</h3></div>',
+        ));
+    }
+
+    if (is_page_template('template-portfolio.php')) {
+        register_sidebar(array(
+            'name'          => esc_html__('Portfolio Homepage', 'agapanto'),
+            'id'            => 'portfolio-homepage',
+            'description'   => esc_html__('Appears on blog index and Portfolio Homepage template. You can use the Portfolio widgets here.', 'agapanto'),
+            'before_widget' => '<div id="%1$s" class="widget %2$s">',
+            'after_widget'  => '</div>',
+            'before_title'  => '<div class="widget-header"><h3 class="widget-title">',
+            'after_title'   => '</h3></div>',
+        ));
+    }
+}
+add_action('wp', 'agapanto_conditional_sidebars');
 
 /* sanitize SVGs */
 /* sanitize SVGs */
