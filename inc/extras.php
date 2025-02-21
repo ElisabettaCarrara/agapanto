@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
  * Custom functions that are not template related
  *
